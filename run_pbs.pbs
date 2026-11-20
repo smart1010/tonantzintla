@@ -1,0 +1,52 @@
+#!/bin/bash
+#PBS -N tonantzintla_mpi
+#PBS -q default
+#PBS -l nodes=1:ppn=24
+#PBS -l walltime=48:00:00
+
+set -euo pipefail
+cd "$PBS_O_WORKDIR"
+
+PYTHON_EXEC=/share/apps/anaconda3/bin/python3.8
+CONDA_BIN_DIR="$(dirname "$PYTHON_EXEC")"
+CONDA_ROOT="$(cd "$CONDA_BIN_DIR/.."; pwd)"
+
+export PATH="$CONDA_BIN_DIR:$PATH"
+export LD_LIBRARY_PATH="$CONDA_ROOT/lib:${LD_LIBRARY_PATH:-}"
+export OMP_NUM_THREADS=1
+export MKL_NUM_THREADS=1
+export OPENBLAS_NUM_THREADS=1
+export MPLBACKEND=Agg
+export HDF5_USE_FILE_LOCKING=FALSE
+export PYTHONPATH="${PBS_O_WORKDIR}:${PYTHONPATH:-}"
+
+MPIEXEC="$CONDA_BIN_DIR/mpiexec"
+if [[ ! -x "$MPIEXEC" ]]; then
+  MPIEXEC="$(command -v mpiexec)"
+fi
+
+if [[ -n "${PBS_NP:-}" ]]; then
+  NP="$PBS_NP"
+elif [[ -f "${PBS_NODEFILE:-}" ]]; then
+  NP="$(wc -l < "$PBS_NODEFILE")"
+else
+  NP=1
+fi
+
+HOSTFILE_ARGS=()
+if [[ -f "${PBS_NODEFILE:-}" ]]; then
+  HOSTFILE_ARGS=(--hostfile "$PBS_NODEFILE")
+fi
+
+"$PYTHON_EXEC" - <<'PY'
+import mpi4py
+from mpi4py import MPI
+print("mpi4py", mpi4py.__version__, "MPI", MPI.Get_version())
+print(MPI.Get_library_version().strip())
+PY
+
+exec "$MPIEXEC" -np "$NP" \
+  "${HOSTFILE_ARGS[@]}" \
+  --mca btl ^openib \
+  --mca plm rsh --mca ras ^tm \
+  "$PYTHON_EXEC" -u -m tonantzintla.main tonantzintla.par

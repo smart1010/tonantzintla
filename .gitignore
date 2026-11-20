@@ -1,0 +1,22 @@
+# Python interpreter and build artifacts
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+
+# Test and analysis artifacts
+.pytest_cache/
+.mypy_cache/
+*.log
+*.png
+*.pdf
+
+# Simulation outputs
+snaps*/
+outputs*/
+3D_*_hdf5_*
+asc-*_*
+plot_limits_*.json
+mass_history.dat

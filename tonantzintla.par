@@ -1,0 +1,114 @@
+# CLOUD-1000 model described by Tenorio-Tagle & Martínez-González (2027).
+
+[run]
+DIM3D = True
+INTEGRATED_MAPS = False
+DUST_ON = False
+TRACERS_ON = True
+TURB_ON = False
+TURB_SEED = 10
+VIEW_PLANE = 'xz'
+T_END_YR = 2500000.0
+CFL = 0.5
+SNAP_EVERY = 10000 # years
+TSERIES_EVERY = 50 # time steps
+
+RESTART = False
+RESTART_SNAP = 0
+SNAP_NEXT_OVERRIDE = 0 # -1 disables the snapshot override
+
+# Zero disables checkpoint scheduling.
+CHK_EVERY_STEPS = 2000
+CHK_EVERY_SECONDS = 72000.0 # 20 hours
+
+basen = 'kh_R15_1e3'
+# LOG_FILE defaults to BASEN.log when omitted.
+# LOG_FILE = 'tvs.log'
+
+[grid]
+lref = 7
+XMIN_PC = -20.0
+XMAX_PC = 20.0
+YMIN_PC = -20.0
+YMAX_PC = 20.0
+ZMIN_PC = -20.0
+ZMAX_PC = 50.0
+
+[ambient]
+RHO_AMB = 1.0202994e-25
+T_AMB = 5.0e6
+VX_AMB_KMS = 0.0
+VY_AMB_KMS = 0.0
+VZ_AMB_KMS = 0.0
+
+[cloud1]
+C1_CENTER_PC = (0.0, 0.0, 0.0)
+C1_RADIUS_PC = 15.0
+C1_RHO = 2.1242298e-21
+C1_T = 5.0e2
+C1_VX_KMS = 0.0
+C1_VY_KMS = 0.0
+C1_VZ_KMS = -1200.0
+
+[cloud2]
+C2_CENTER_PC = (-1000000.0, 0.0, 0.0)
+C2_RADIUS_PC = 0.0
+C2_RHO = 2.1242298e-21
+C2_T = 5.0e2
+C2_VX_KMS = 0.0
+C2_VY_KMS = 0.0
+C2_VZ_KMS = 0.0
+
+[turbulence]
+SIGMA_T_AMB_KMS = 0.0
+SIGMA_T_C1_KMS = 0.0
+SIGMA_T_C2_KMS = 0.0
+
+[cooling]
+COOLING_ON = False
+USE_COOLZ = False
+Z_OVER_ZSUN = 1.0
+SCHURE_ION_DEG_INDEX = 0
+
+[dust]
+D_INIT_AMBIENT = 0.0e-2
+D_INIT_CLOUD1 = 0.0e-2
+D_INIT_CLOUD2 = 0.0e-2
+DUST_GAS_COOLING_ON = False
+DUST_BINS = 'lognormal'
+DUST_NBINS = 10
+DUST_A_MIN_UM = 0.005
+DUST_A_MAX_UM = 0.5
+LOGNORM_A0_UM = 0.1
+LOGNORM_SIGMA = 0.5
+MRN_Q = -3.5
+
+[solver]
+ORDER = 'plm'
+RIEMANN = 'hlle'
+
+[parallel]
+
+[plot]
+VIEW_PLANE = 'xz'
+SNAP_PLOTS_ON = True
+DIAG_PLOTS_ON = True
+# OUTDIR = 'snaps_strip'
+
+[files]
+LAMBDA_TABLE_FILE = 'tonantzintla/data/Schure_total.dat'
+
+[wind]
+WIND_ON = False
+WIND_FACE = z-
+WIND_VX_KMS = 0.0
+WIND_VY_KMS = 0.0
+WIND_VZ_KMS = 0.0
+WIND_T = 5.e6
+WIND_N_CM3 = 1.0e-1
+WIND_DUST_TO_GAS = 0.0e-2
+
+[frame]
+MOVING_FRAME_ON = True
+MOVING_FRAME_AXIS = 'z'
+MOVING_FRAME_V_KMS = -1200.0
